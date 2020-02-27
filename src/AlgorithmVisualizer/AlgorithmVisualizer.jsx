@@ -40,7 +40,7 @@ export default class AlgorithmVisualizer extends Component {
 
   updateWindowDimensions() {
     const { width, height} = this.state;
-    const newWidth = Math.max(window.innerWidth - 75, 0) / 25;
+    const newWidth = Math.max(window.innerWidth - 100, 0) / 25;
     const newHeight = Math.max(window.innerHeight - 150, 0) / 25;
 
     if (END_CELL_ROW === START_CELL_ROW && START_CELL_COL === END_CELL_COL && START_CELL_COL === -1) {
