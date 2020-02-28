@@ -4,11 +4,11 @@ import {Dijkstra} from '../algorithms/dijkstras';
 
 import './AlgorithmVisualizer.css';
 
-class CellType {
-    static START = 'start';
-    static END = 'end';
-    static WALL = 'wall';
-    static NORMAL = 'normal';
+export const cellType = {
+    START: 'start',
+    END: 'end',
+    WALL: 'wall',
+    NORMAL: 'normal'
 }
 
 let START_CELL_ROW = -1;
@@ -23,6 +23,8 @@ export default class AlgorithmVisualizer extends Component {
     this.state = {
       grid: [],
       mouseIsPressed: false,
+      movingStart:  false,
+      movingEnd: false,
       width: 0,
       height: 0,
     };
@@ -61,7 +63,8 @@ export default class AlgorithmVisualizer extends Component {
   }
 
   handleMouseDown(row, col) {
-    const newGrid = toggleCellWall(this.state.grid, row, col);
+    const { grid } = this.state;
+    let newGrid = toggleCellWall(grid, row, col);
     this.setState({grid: newGrid, mouseIsPressed: true});
   }
 
@@ -161,11 +164,11 @@ const generateGrid = (width, height) => {
     const currentRow = [];
     for (let col = 0; col < width; col++) {
       if (col === START_CELL_COL && row === START_CELL_ROW) {
-          currentRow.push(createCell(col, row, CellType.START));
+          currentRow.push(createCell(col, row, cellType.START));
       } else if (col === END_CELL_COL && row === END_CELL_ROW) {
-          currentRow.push(createCell(col, row, CellType.END));
+          currentRow.push(createCell(col, row, cellType.END));
       } else {
-          currentRow.push(createCell(col, row, CellType.NORMAL));
+          currentRow.push(createCell(col, row, cellType.NORMAL));
       }
     }
     grid.push(currentRow);
@@ -189,7 +192,7 @@ const toggleCellWall = (grid, row, col) => {
   const cell = newGrid[row][col];
   const newCell = {
     ...cell,
-    type: cell.type === CellType.WALL ? CellType.NORMAL : CellType.WALL,
+    type: cell.type === cellType.NORMAL ? cellType.WALL : cell.type,
   };
   newGrid[row][col] = newCell;
   return newGrid;

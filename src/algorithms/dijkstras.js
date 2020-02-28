@@ -1,3 +1,5 @@
+import { cellType } from '../AlgorithmVisualizer/AlgorithmVisualizer.jsx'
+
 export class Dijkstra {
     constructor() {
         this.executeAlgorithm = this.executeAlgorithm.bind(this);
@@ -11,6 +13,8 @@ export class Dijkstra {
     executeAlgorithm(grid, start, end) {
         let visitedCells = [];
         start.distance = 0;
+        console.log(cellType);
+        console.log(cellType.WALL);
         const unvisitedCells = this.getAllCells(grid);
         while (!!unvisitedCells.length) {
             this.sortCellsByDistance(unvisitedCells);
@@ -40,13 +44,14 @@ export class Dijkstra {
     }
 
     getUnvisitedNeighbors(cell, grid) {
-      const neighbors = [];
+      let neighbors = [];
       const {col, row} = cell;
       if (row > 0) neighbors.push(grid[row - 1][col]);
       if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
       if (col > 0) neighbors.push(grid[row][col - 1]);
       if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-      return neighbors.filter(neighbor => !neighbor.isVisited);
+
+      return neighbors.filter(neighbor => !neighbor.isVisited && !(neighbor.type === cellType.WALL));
     }
 
     getAllCells(grid) {
