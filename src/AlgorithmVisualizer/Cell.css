@@ -4,6 +4,30 @@
   background-color: #f9f8f7;
   outline: 1px solid rgb(216, 215, 214);
   display: inline-block;
+  animation-name: jazzyTouch;
+  animation-duration: 1.5s;
+}
+
+@keyframes jazzyTouch {
+  0% {
+    transform: scale(0.5);
+    background-color: rgb(52, 195, 255);
+    border-radius: 100%;
+  }
+
+  25% {
+    transform: scale(0.3);
+    border-radius: 100%;
+  }
+
+  75% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgb(198, 194, 196);
+  }
 }
 
 .end {

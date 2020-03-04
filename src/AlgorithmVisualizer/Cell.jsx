@@ -42,6 +42,7 @@ export default class Cell extends Component {
 
     return (
       <div
+        style={{siaduhiuhsdi: 5}}
         onDrop={this.drop}
         onDrag={this.drag}
         onDragOver={this.allowDrop}
