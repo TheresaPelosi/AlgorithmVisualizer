@@ -13,8 +13,6 @@ export class Dijkstra {
     executeAlgorithm(grid, start, end) {
         let visitedCells = [];
         start.distance = 0;
-        console.log(cellType);
-        console.log(cellType.WALL);
         const unvisitedCells = this.getAllCells(grid);
         while (!!unvisitedCells.length) {
             this.sortCellsByDistance(unvisitedCells);
@@ -32,13 +30,13 @@ export class Dijkstra {
     }
 
     sortCellsByDistance(unvisitedCells) {
-        unvisitedCells.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+        unvisitedCells.sort((left, right) => left.distance - right.distance);
     }
 
     updateUnvisitedNeighbors(cell, grid) {
         const unvisitedNeighbors = this.getUnvisitedNeighbors(cell, grid);
         for (const neighbor of unvisitedNeighbors) {
-            neighbor.distance = cell.distance + 1;
+            neighbor.distance = cell.distance + neighbor.weight;
             neighbor.previousCell = cell;
         }
     }

@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import SplitButton from 'react-bootstrap/SplitButton'
+import Dropdown from 'react-bootstrap/Dropdown'
+
 import Cell from './Cell';
 import {Dijkstra} from '../algorithms/dijkstras';
 
@@ -9,13 +12,12 @@ export const cellType = {
     END: 'end',
     WALL: 'wall',
     NORMAL: 'normal'
-}
+};
 
 let START_CELL_ROW = -1;
 let START_CELL_COL = -1;
 let END_CELL_ROW = -1;
 let END_CELL_COL = -1;
-let algorithm = new Dijkstra();
 
 export default class AlgorithmVisualizer extends Component {
   constructor() {
@@ -27,6 +29,8 @@ export default class AlgorithmVisualizer extends Component {
       movingEnd: false,
       width: 0,
       height: 0,
+      algorithm: new Dijkstra(),
+      algorithmName: "Dijkstra's",
     };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
@@ -41,24 +45,15 @@ export default class AlgorithmVisualizer extends Component {
   }
 
   updateWindowDimensions() {
-    const { width, height} = this.state;
-    const newWidth = Math.max(window.innerWidth - 100, 0) / 25;
-    const newHeight = Math.max(window.innerHeight - 150, 0) / 25;
+    const newWidth = Math.floor(Math.max(window.innerWidth - 15, 0) / 25);
+    const newHeight = Math.floor(Math.max(window.innerHeight - 125, 0) / 25);
 
     if (END_CELL_ROW === START_CELL_ROW && START_CELL_COL === END_CELL_COL && START_CELL_COL === -1) {
         END_CELL_ROW = START_CELL_ROW = Math.floor(newHeight / 2);
         START_CELL_COL = Math.floor(newWidth / 3);
         END_CELL_COL = Math.floor(newWidth / 3) * 2;
-    } else {
-        const widthRatio = newWidth / width;
-        const heightRatio = newHeight / height;
-
-        START_CELL_ROW = Math.floor(START_CELL_ROW * heightRatio);
-        START_CELL_COL = Math.floor(START_CELL_COL * widthRatio);
-        END_CELL_ROW = Math.floor(END_CELL_ROW * heightRatio);
-        END_CELL_COL = Math.floor(END_CELL_COL * widthRatio);
     }
-    const grid = generateGrid(newWidth, newHeight);
+    const grid = generateGrid(Math.max(START_CELL_COL+1, END_CELL_COL+1, newWidth), Math.max(START_CELL_ROW, END_CELL_ROW, newHeight));
     this.setState({ width: newWidth, height: newHeight, grid });
   }
 
@@ -79,45 +74,76 @@ export default class AlgorithmVisualizer extends Component {
   }
 
   visualize() {
-    let {grid} = this.state;
-    grid.forEach((row) => {
-        row.forEach((cell) => {
-          document.getElementById(`cell-${cell.row}-${cell.col}`).className = document
-              .getElementById(`cell-${cell.row}-${cell.col}`).className.replace(' visited', '')
-              .replace(' shortest-path', '');
-        })
-    });
+    this.resetBoard();
+    let {grid, algorithm} = this.state;
     const startCell = grid[START_CELL_ROW][START_CELL_COL];
     const endCell = grid[END_CELL_ROW][END_CELL_COL];
     const visitedCells = algorithm.executeAlgorithm(grid, startCell, endCell);
     const path = algorithm.getPath(endCell);
-    this.animate(visitedCells, path);
+    this.animateAlgorithm(visitedCells, path);
   }
 
-  animate(visitedNodesInOrder, nodesInShortestPathOrder) {
-    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-      if (i === visitedNodesInOrder.length) {
+  animateAlgorithm(visitedCells, shortestPath) {
+    for (let i = 0; i <= visitedCells.length; i++) {
+      if (i === visitedCells.length) {
         setTimeout(() => {
-          this.animateShortestPath(nodesInShortestPathOrder);
+          this.animateShortestPath(shortestPath);
         }, 10 * i);
         return;
       }
       setTimeout(() => {
-        const node = visitedNodesInOrder[i];
-        document.getElementById(`cell-${node.row}-${node.col}`).className +=
-          ' visited';
+        const cell = visitedCells[i];
+        document.getElementById(`cell-${cell.row}-${cell.col}`).className =
+          `cell normal ${cell.type} visited`;
       }, 10 * i);
     }
   }
 
-  animateShortestPath(nodesInShortestPathOrder) {
-    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+  animateShortestPath(shortestPath) {
+    for (let i = 0; i < shortestPath.length; i++) {
       setTimeout(() => {
-        const node = nodesInShortestPathOrder[i];
-        document.getElementById(`cell-${node.row}-${node.col}`).className +=
-          ' shortest-path';
+        const cell = shortestPath[i];
+        document.getElementById(`cell-${cell.row}-${cell.col}`).className =
+          `cell normal ${cell.type} shortest-path`;
       }, 50 * i);
     }
+  }
+
+  swapAlgorithm(event) {
+    event.preventDefault();
+    var anchor = event.currentTarget;
+    var text = anchor.text;
+    var button = document.getElementById("visualize");
+    button.text = text;
+    //button.on('click', this.visualize());
+  }
+
+  distributeWeights() {
+    const { grid } = this.state
+    grid.forEach((row) => {
+      row.forEach((cell) => {
+        cell.weight = Math.floor(Math.random() * 10) + 1;
+      })
+    })
+  }
+
+  resetBoard(resetWalls=false) {
+    let {grid} = this.state;
+    grid.forEach((row) => {
+        row.forEach((cell) => {
+          document.getElementById(`cell-${cell.row}-${cell.col}`).className = `cell normal ${cell.type}`;
+          cell.isVisited = false;
+          cell.className = `cell normal ${cell.type}`;
+          if (resetWalls) {
+            if (cell.type === cellType.WALL) {
+              cell.className = `cell normal`;
+              cell.type = cellType.NORMAL;
+            }
+          }
+        })
+    });
+
+    this.setState({ grid })
   }
 
   render() {
@@ -125,21 +151,31 @@ export default class AlgorithmVisualizer extends Component {
 
     return (
         <>
-        <button onClick={() => this.visualize()}>
-          Visualize Dijkstra's Algorithm
+        <SplitButton onClick={() => this.visualize()} id="dropdown-item-button" title={`Visualize ${this.state.algorithmName}`}>
+          <Dropdown.Item onClick={() => this.setState({algorithm: new Dijkstra(), algorithmName: "Dijksra's"})} as="button">Dijkstra's</Dropdown.Item>
+          <Dropdown.Item as="button">Another action</Dropdown.Item>
+          <Dropdown.Item as="button">Something else</Dropdown.Item>
+        </SplitButton>
+
+        <button onClick={() => this.distributeWeights()}>
+          Add Random Weights
         </button>
-        <div className="grid centered">
+        <button onClick={() => this.resetBoard(true)}>
+          Reset
+        </button>
+        <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
               <div key={rowIdx}>
                 {row.map((cell, cellIdx) => {
-                  const {row, col, type} = cell;
+                  const {row, col, type, weight} = cell;
                   return (
                     <Cell
                       key={cellIdx}
                       col={col}
                       row={row}
                       type={type}
+                      weight={weight}
                       mouseIsPressed={mouseIsPressed}
                       onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                       onMouseEnter={(row, col) =>
@@ -159,6 +195,7 @@ export default class AlgorithmVisualizer extends Component {
 }
 
 const generateGrid = (width, height) => {
+  console.log(width)
   const grid = [];
   for (let row = 0; row < height; row++) {
     const currentRow = [];
@@ -181,6 +218,7 @@ const createCell = (col, row, type) => {
     col,
     row,
     type: type,
+    weight: 1,
     distance: Infinity,
     isVisited: false,
     previousCell: null,

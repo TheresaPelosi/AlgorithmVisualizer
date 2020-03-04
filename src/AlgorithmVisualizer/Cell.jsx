@@ -17,18 +17,17 @@ export default class Cell extends Component {
   }
 
   drag = (event) => {
-    event.dataTransfer.setData("text", event.target.id)
-  }
+    event.dataTransfer.setData("text/plain", event.target.id);
+    console.log(event.dataTransfer);
+  };
 
   drop = (event) => {
     if (event.target.id) {
-      console.log(event.dataTransfer.getData("text"))
-      console.log(event.dataTransfer)
-      event.target = document.getElementById(event.dataTransfer.getData("text"))
+      event.target = document.getElementById(event.dataTransfer);
       event.dataTransfer.clearData()
     }
     this.props.onMouseUp();
-  }
+  };
 
   render() {
     const {
@@ -38,19 +37,27 @@ export default class Cell extends Component {
       onMouseDown,
       onMouseEnter,
       onMouseUp,
+      weight,
     } = this.props;
 
+    console.log(weight)
+
     return (
-      <div
-        onDrop={this.drop}
-        onDrag={this.drag}
-        onDragOver={this.allowDrop}
-        id={`cell-${row}-${col}`}
-        className={`cell normal ${type}`}
-        draggable={(type === cellType.START || type === cellType.END)}
-        onMouseDown={() => onMouseDown(row, col)}
-        onMouseEnter={() => onMouseEnter(row, col)}
-        onMouseUp={() => onMouseUp()}></div>
+      <>
+        <div
+          onDrop={this.drop}
+          onDrag={this.drag}
+          onDragOver={this.allowDrop}
+          id={`cell-${row}-${col}`}
+          className={`cell normal ${type}`}
+          draggable={(type === cellType.START || type === cellType.END)}
+          onMouseDown={() => onMouseDown(row, col)}
+          onMouseEnter={() => onMouseEnter(row, col)}
+          onMouseUp={() => onMouseUp()}></div>
+        <div id="overlay">
+          <div id="text">{weight}</div>
+        </div>
+      </>
     );
   }
 }
