@@ -1,3 +1,9 @@
 .grid {
-  margin: 16px 25px 0;
+  margin-top: 5px;
+  overflow: auto;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
