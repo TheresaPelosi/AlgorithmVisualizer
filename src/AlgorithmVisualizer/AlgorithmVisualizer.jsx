@@ -5,6 +5,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import Cell from './Cell';
 import {Dijkstra} from '../algorithms/dijkstras';
 import {BreadthFirst} from '../algorithms/breadth-first';
+import {DepthFirst} from '../algorithms/depth-first';
 
 import './AlgorithmVisualizer.css';
 
@@ -15,10 +16,10 @@ export const cellType = {
     NORMAL: 'normal'
 };
 
-let START_CELL_ROW = -1;
-let START_CELL_COL = -1;
-let END_CELL_ROW = -1;
-let END_CELL_COL = -1;
+let START_CELL_ROW = 0;
+let START_CELL_COL = 0;
+let END_CELL_ROW = 4;
+let END_CELL_COL = 4;
 
 export default class AlgorithmVisualizer extends Component {
   constructor() {
@@ -30,6 +31,7 @@ export default class AlgorithmVisualizer extends Component {
       movingEnd: false,
       width: 0,
       height: 0,
+      animating: false,
       algorithm: new Dijkstra(),
       algorithmName: "Dijkstra's",
     };
@@ -46,6 +48,7 @@ export default class AlgorithmVisualizer extends Component {
   }
 
   updateWindowDimensions() {
+    const {animating} = this.state;
     const newWidth = Math.floor(Math.max(window.innerWidth - 15, 0) / 25);
     const newHeight = Math.floor(Math.max(window.innerHeight - 125, 0) / 25);
 
@@ -54,8 +57,11 @@ export default class AlgorithmVisualizer extends Component {
         START_CELL_COL = Math.floor(newWidth / 3);
         END_CELL_COL = Math.floor(newWidth / 3) * 2;
     }
-    const grid = generateGrid(Math.max(START_CELL_COL+1, END_CELL_COL+1, newWidth), Math.max(START_CELL_ROW, END_CELL_ROW, newHeight));
-    this.setState({ width: newWidth, height: newHeight, grid });
+
+    if (!animating) {
+      const grid = generateGrid(Math.max(START_CELL_COL+1, END_CELL_COL+1, newWidth), Math.max(START_CELL_ROW, END_CELL_ROW, newHeight));
+      this.setState({ width: newWidth, height: newHeight, grid });
+    }
   }
 
   handleMouseDown(row, col) {
@@ -76,22 +82,22 @@ export default class AlgorithmVisualizer extends Component {
 
   visualize() {
     this.resetBoard();
+    this.updateWindowDimensions();
     let {grid, algorithm} = this.state;
     const startCell = grid[START_CELL_ROW][START_CELL_COL];
     const endCell = grid[END_CELL_ROW][END_CELL_COL];
     const visitedCells = algorithm.executeAlgorithm(grid, startCell, endCell);
-    console.log(algorithm)
-    console.log(visitedCells)
     const path = algorithm.getPath(endCell);
     this.animateAlgorithm(visitedCells, path);
   }
 
   animateAlgorithm(visitedCells, shortestPath) {
+    this.setState({ animating: true })
     for (let i = 0; i <= visitedCells.length; i++) {
       if (i === visitedCells.length) {
         setTimeout(() => {
           this.animateShortestPath(shortestPath);
-        }, 10 * i);
+        }, 1000 + 10 * i);
         return;
       }
       setTimeout(() => {
@@ -110,6 +116,7 @@ export default class AlgorithmVisualizer extends Component {
           `cell normal ${cell.type} shortest-path`;
       }, 50 * i);
     }
+    this.setState({ animating: false })
   }
 
   swapAlgorithm(event) {
@@ -157,7 +164,7 @@ export default class AlgorithmVisualizer extends Component {
         <SplitButton onClick={() => this.visualize()} id="dropdown-item-button" title={`Visualize ${this.state.algorithmName}`}>
           <Dropdown.Item onClick={() => this.setState({algorithm: new Dijkstra(), algorithmName: "Dijksra's"})} as="button">Dijkstra's</Dropdown.Item>
           <Dropdown.Item onClick={() => this.setState({algorithm: new BreadthFirst(), algorithmName: "Breadth-First Search"})} as="button">Breadth-First Search</Dropdown.Item>
-          <Dropdown.Item as="button">Something else</Dropdown.Item>
+          <Dropdown.Item onClick={() => this.setState({algorithm: new DepthFirst(), algorithmName: "Depth-First Search"})} as="button">Depth-First Search</Dropdown.Item>
         </SplitButton>
 
         <button onClick={() => this.distributeWeights()}>

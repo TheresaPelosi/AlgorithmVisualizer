@@ -40,4 +40,14 @@ export class Algorithm {
         }
         return cells;
     }
+
+    getPath(end) {
+        const path = [];
+        let current = end;
+        while (current !== null) {
+            path.unshift(current);
+            current = current.previousCell;
+        }
+        return path;
+    }
 }

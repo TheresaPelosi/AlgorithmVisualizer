@@ -4,41 +4,30 @@ export class BreadthFirst extends Algorithm {
     constructor() {
         super();
         this.executeAlgorithm = this.executeAlgorithm.bind(this);
-        this.getPath = this.getPath.bind(this);
     }
 
     executeAlgorithm(grid, start, end) {
         let visitedCells = [];
-        let queue = this.getUnvisitedNeighbors(start, grid);
+        start.isVisited = true;
+        let queue = [start];
 
         while (!!queue.length) {
-            console.log(queue.length)
-            const neighbor = queue.shift()
-            console.log(queue.length)
-            console.log("Should be one smaller")
+            const head = queue.shift()
 
-            neighbor.isVisited = true;
-            visitedCells.push(neighbor);
-            if (neighbor === end) {
+            //document.getElementById(`cell-${neighbor.row}-${neighbor.col}`).className =
+              //`cell normal ${neighbor.type} visited`;
+            visitedCells.push(head);
+            if (head === end) {
                 return visitedCells;
             }
 
-            console.log(queue.length)
-            queue = queue.concat(this.getUnvisitedNeighbors(neighbor, grid));
-            console.log(queue.length)
-            console.log("Should be a max of four more")
-            this.updateUnvisitedNeighbors(neighbor, grid);
+            this.updateUnvisitedNeighbors(head, grid);
+            for (let neighbor of this.getUnvisitedNeighbors(head, grid)) {
+              neighbor.isVisited = true;
+              queue.push(neighbor);
+            }
         }
-        return visitedCells;
-    }
 
-    getPath(end) {
-        const path = [];
-        let current = end;
-        while (current !== null) {
-            path.unshift(current);
-            current = current.previousCell;
-        }
-        return path;
+        return visitedCells;
     }
 }

@@ -25,14 +25,4 @@ export class Dijkstra extends Algorithm {
             this.updateUnvisitedNeighbors(neighbor, grid);
         }
     }
-
-    getPath(end) {
-        const path = [];
-        let current = end;
-        while (current !== null) {
-            path.unshift(current);
-            current = current.previousCell;
-        }
-        return path;
-    }
 }
