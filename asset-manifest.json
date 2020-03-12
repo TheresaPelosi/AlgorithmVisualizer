@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/algorithm-visualizer/static/css/main.15e0ca0f.chunk.css",
-    "main.js": "/algorithm-visualizer/static/js/main.9e7124bb.chunk.js",
-    "main.js.map": "/algorithm-visualizer/static/js/main.9e7124bb.chunk.js.map",
-    "runtime-main.js": "/algorithm-visualizer/static/js/runtime-main.e06faf2a.js",
-    "runtime-main.js.map": "/algorithm-visualizer/static/js/runtime-main.e06faf2a.js.map",
-    "static/css/2.47e06e2e.chunk.css": "/algorithm-visualizer/static/css/2.47e06e2e.chunk.css",
-    "static/js/2.ae8d6f87.chunk.js": "/algorithm-visualizer/static/js/2.ae8d6f87.chunk.js",
-    "static/js/2.ae8d6f87.chunk.js.map": "/algorithm-visualizer/static/js/2.ae8d6f87.chunk.js.map",
-    "index.html": "/algorithm-visualizer/index.html",
-    "precache-manifest.fa4c3e08f896f4dc1da9b8cdb23512c0.js": "/algorithm-visualizer/precache-manifest.fa4c3e08f896f4dc1da9b8cdb23512c0.js",
-    "service-worker.js": "/algorithm-visualizer/service-worker.js",
-    "static/css/2.47e06e2e.chunk.css.map": "/algorithm-visualizer/static/css/2.47e06e2e.chunk.css.map",
-    "static/css/main.15e0ca0f.chunk.css.map": "/algorithm-visualizer/static/css/main.15e0ca0f.chunk.css.map",
-    "static/js/2.ae8d6f87.chunk.js.LICENSE.txt": "/algorithm-visualizer/static/js/2.ae8d6f87.chunk.js.LICENSE.txt"
+    "main.css": "/static/css/main.15e0ca0f.chunk.css",
+    "main.js": "/static/js/main.e73fdd5c.chunk.js",
+    "main.js.map": "/static/js/main.e73fdd5c.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.a6eb7445.js",
+    "runtime-main.js.map": "/static/js/runtime-main.a6eb7445.js.map",
+    "static/css/2.47e06e2e.chunk.css": "/static/css/2.47e06e2e.chunk.css",
+    "static/js/2.ae8d6f87.chunk.js": "/static/js/2.ae8d6f87.chunk.js",
+    "static/js/2.ae8d6f87.chunk.js.map": "/static/js/2.ae8d6f87.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.213049503f82cd49ac75c65480d46179.js": "/precache-manifest.213049503f82cd49ac75c65480d46179.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.47e06e2e.chunk.css.map": "/static/css/2.47e06e2e.chunk.css.map",
+    "static/css/main.15e0ca0f.chunk.css.map": "/static/css/main.15e0ca0f.chunk.css.map",
+    "static/js/2.ae8d6f87.chunk.js.LICENSE.txt": "/static/js/2.ae8d6f87.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.e06faf2a.js",
+    "static/js/runtime-main.a6eb7445.js",
     "static/css/2.47e06e2e.chunk.css",
     "static/js/2.ae8d6f87.chunk.js",
     "static/css/main.15e0ca0f.chunk.css",
-    "static/js/main.9e7124bb.chunk.js"
+    "static/js/main.e73fdd5c.chunk.js"
   ]
 }
