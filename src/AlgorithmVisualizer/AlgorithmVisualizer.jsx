@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import SplitButton from 'react-bootstrap/SplitButton'
 import Dropdown from 'react-bootstrap/Dropdown'
+import Button from 'react-bootstrap/Button';
 
 import Cell from './Cell';
 import {Dijkstra} from '../algorithms/dijkstras';
@@ -16,10 +17,10 @@ export const cellType = {
     NORMAL: 'normal'
 };
 
-let START_CELL_ROW = 0;
-let START_CELL_COL = 0;
-let END_CELL_ROW = 4;
-let END_CELL_COL = 4;
+let START_CELL_ROW = -1;
+let START_CELL_COL = -1;
+let END_CELL_ROW = -1;
+let END_CELL_COL = -1;
 
 export default class AlgorithmVisualizer extends Component {
   constructor() {
@@ -161,18 +162,17 @@ export default class AlgorithmVisualizer extends Component {
 
     return (
         <>
-        <SplitButton onClick={() => this.visualize()} id="dropdown-item-button" title={`Visualize ${this.state.algorithmName}`}>
-          <Dropdown.Item onClick={() => this.setState({algorithm: new Dijkstra(), algorithmName: "Dijksra's"})} as="button">Dijkstra's</Dropdown.Item>
-          <Dropdown.Item onClick={() => this.setState({algorithm: new BreadthFirst(), algorithmName: "Breadth-First Search"})} as="button">Breadth-First Search</Dropdown.Item>
-          <Dropdown.Item onClick={() => this.setState({algorithm: new DepthFirst(), algorithmName: "Depth-First Search"})} as="button">Depth-First Search</Dropdown.Item>
-        </SplitButton>
-
-        <button onClick={() => this.distributeWeights()}>
-          Add Random Weights
-        </button>
-        <button onClick={() => this.resetBoard(true)}>
-          Reset
-        </button>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <SplitButton onClick={() => this.visualize()} id="dropdown-item-button" title={`Visualize ${this.state.algorithmName}`}>
+            <Dropdown.Item onClick={() => this.setState({algorithm: new Dijkstra(), algorithmName: "Dijkstra's"})} as="button">Dijkstra's</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.setState({algorithm: new BreadthFirst(), algorithmName: "Breadth-First Search"})} as="button">Breadth-First Search</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.setState({algorithm: new DepthFirst(), algorithmName: "Depth-First Search"})} as="button">Depth-First Search</Dropdown.Item>
+          </SplitButton>
+          <div style={{padding: '4px'}}/>
+          <Button onClick={() => this.resetBoard(true)}>
+            Reset
+          </Button>
+        </div>
         <div className="grid">
           {grid.map((row, rowIdx) => {
             return (
