@@ -48,7 +48,7 @@ export default class AlgorithmVisualizer extends Component {
     window.removeEventListener('resize', this.updateWindowDimensions);
   }
 
-  updateWindowDimensions() {
+  updateWindowDimensions(oldGrid=null) {
     const {animating, width, height} = this.state;
     const newWidth = Math.floor(Math.max(window.innerWidth - 15, 0) / 25);
     const newHeight = Math.floor(Math.max(window.innerHeight - 125, 0) / 25);
@@ -60,7 +60,8 @@ export default class AlgorithmVisualizer extends Component {
     }
 
     if (!animating && width !== newWidth && height !== newWidth) {
-      const grid = generateGrid(Math.max(START_CELL_COL+1, END_CELL_COL+1, newWidth), Math.max(START_CELL_ROW, END_CELL_ROW, newHeight));
+      const grid = generateGrid(Math.max(START_CELL_COL+1, END_CELL_COL+1, newWidth),
+          Math.max(START_CELL_ROW, END_CELL_ROW, newHeight), oldGrid);
       this.setState({ width: newWidth, height: newHeight, grid });
     }
   }
@@ -83,8 +84,8 @@ export default class AlgorithmVisualizer extends Component {
 
   visualize() {
     this.resetBoard();
-    this.updateWindowDimensions();
     let {grid, algorithm} = this.state;
+    this.updateWindowDimensions(grid);
     const startCell = grid[START_CELL_ROW][START_CELL_COL];
     const endCell = grid[END_CELL_ROW][END_CELL_COL];
     const visitedCells = algorithm.executeAlgorithm(grid, startCell, endCell);
@@ -203,17 +204,19 @@ export default class AlgorithmVisualizer extends Component {
   }
 }
 
-const generateGrid = (width, height) => {
+const generateGrid = (width, height, oldGrid=null) => {
   const grid = [];
   for (let row = 0; row < height; row++) {
     const currentRow = [];
     for (let col = 0; col < width; col++) {
-      if (col === START_CELL_COL && row === START_CELL_ROW) {
-          currentRow.push(createCell(col, row, cellType.START));
+      if (oldGrid && col <= oldGrid[0].length && row <= oldGrid.length) {
+        currentRow.push(oldGrid[row][col]);
+      } else if (col === START_CELL_COL && row === START_CELL_ROW) {
+        currentRow.push(createCell(col, row, cellType.START));
       } else if (col === END_CELL_COL && row === END_CELL_ROW) {
-          currentRow.push(createCell(col, row, cellType.END));
+        currentRow.push(createCell(col, row, cellType.END));
       } else {
-          currentRow.push(createCell(col, row, cellType.NORMAL));
+        currentRow.push(createCell(col, row, cellType.NORMAL));
       }
     }
     grid.push(currentRow);
