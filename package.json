@@ -2,7 +2,7 @@
   "name": "algorithm-visualizer",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://theresapelosi.github.io/algorithm-visualizer",
+  "homepage": "https://theresapelosi.github.io/AlgorithmVisualizer",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
