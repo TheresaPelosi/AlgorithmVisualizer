@@ -49,7 +49,7 @@ export default class AlgorithmVisualizer extends Component {
   }
 
   updateWindowDimensions() {
-    const {animating} = this.state;
+    const {animating, width, height} = this.state;
     const newWidth = Math.floor(Math.max(window.innerWidth - 15, 0) / 25);
     const newHeight = Math.floor(Math.max(window.innerHeight - 125, 0) / 25);
 
@@ -59,7 +59,7 @@ export default class AlgorithmVisualizer extends Component {
         END_CELL_COL = Math.floor(newWidth / 3) * 2;
     }
 
-    if (!animating) {
+    if (!animating && width !== newWidth && height !== newWidth) {
       const grid = generateGrid(Math.max(START_CELL_COL+1, END_CELL_COL+1, newWidth), Math.max(START_CELL_ROW, END_CELL_ROW, newHeight));
       this.setState({ width: newWidth, height: newHeight, grid });
     }
@@ -144,7 +144,6 @@ export default class AlgorithmVisualizer extends Component {
         row.forEach((cell) => {
           document.getElementById(`cell-${cell.row}-${cell.col}`).className = `cell normal ${cell.type}`;
           cell.isVisited = false;
-          cell.className = `cell normal ${cell.type}`;
           if (resetWalls) {
             if (cell.type === cellType.WALL) {
               cell.className = `cell normal`;
@@ -239,7 +238,8 @@ const toggleCellWall = (grid, row, col) => {
   const cell = newGrid[row][col];
   const newCell = {
     ...cell,
-    type: cell.type === cellType.NORMAL ? cellType.WALL : cell.type,
+    type: (cell.type === cellType.NORMAL ? cellType.WALL: cell.type) ||
+    (cell.type === cellType.WALL ? cellType.NORMAL : cell.type),
   };
   newGrid[row][col] = newCell;
   return newGrid;
